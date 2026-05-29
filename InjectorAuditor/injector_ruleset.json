@@ -1,0 +1,86 @@
+{
+  "ruleset_version": "1.0.0",
+  "rules": [
+    {
+      "id": "ERR_SPID_INVALID_FORMID",
+      "framework": "spid",
+      "name": "Invalid SPID FormID",
+      "severity": "CRITICAL",
+      "match_type": "field_formid",
+      "field_index": 0,
+      "description": "The distribution target FormID is not a valid hex reference (0x[hex]~Plugin.esp) or known keyword name. SPID will silently skip or misparse this entry at game launch, causing the distribution to never fire.",
+      "remediation": "Correct the FormID to the format 0xFFFFFF~PluginName.esp, or replace with a valid keyword EditorID string."
+    },
+    {
+      "id": "WARN_SPID_ZERO_CHANCE",
+      "framework": "spid",
+      "name": "Zero-Chance SPID Entry",
+      "severity": "WARNING",
+      "match_type": "field_numeric",
+      "field_index": -1,
+      "operator": "eq",
+      "value": 0,
+      "description": "The distribution chance is set to 0. SPID still parses and processes this entry at launch but will never actually distribute anything. Dead entries waste pre-menu parse time.",
+      "remediation": "Either remove this entry or raise the chance to the intended value (1–100)."
+    },
+    {
+      "id": "NOTE_SPID_NO_FILTER",
+      "framework": "spid",
+      "name": "Unfiltered SPID Distribution",
+      "severity": "NOTICE",
+      "match_type": "field_all_none",
+      "fields": [1, 2, 3, 4, 5],
+      "description": "All filter fields are NONE, meaning this entry distributes to every single NPC in the game unconditionally. This is occasionally intentional but is worth reviewing.",
+      "remediation": "If intentional, suppress this notice. Otherwise add keyword, race, or NPC filters in fields 2–6 to narrow the distribution."
+    },
+    {
+      "id": "ERR_KID_INVALID_FORMID",
+      "framework": "kid",
+      "name": "Invalid KID FormID or Keyword",
+      "severity": "CRITICAL",
+      "match_type": "field_formid",
+      "field_index": 0,
+      "description": "The keyword reference in field 1 is not a valid FormID (0x[hex]~Plugin) or a recognised keyword EditorID. KID will fail to inject this keyword at game launch.",
+      "remediation": "Correct to 0xFFFFFF~PluginName.esp or supply a valid keyword EditorID string."
+    },
+    {
+      "id": "ERR_KID_UNKNOWN_TYPE",
+      "framework": "kid",
+      "name": "Unknown KID Object Type",
+      "severity": "CRITICAL",
+      "match_type": "field_enum",
+      "field_index": 1,
+      "description": "The object type field does not match any known KID object type. KID will reject this entry and skip keyword injection for it.",
+      "remediation": "Replace with a valid type: Activator, Ammo, Armor, Book, Clothing, Enchantment, Flora, Furniture, Ingredient, Key, Location, Magic Effect, Misc Item, NPC, Potion, Race, Scroll, Soul Gem, Spell, or Weapon."
+    },
+    {
+      "id": "WARN_KID_BROAD_WILDCARD",
+      "framework": "kid",
+      "name": "KID Broad Wildcard Filter",
+      "severity": "WARNING",
+      "match_type": "field_exact",
+      "field_index": 2,
+      "value": "*",
+      "description": "The filter field is a bare wildcard (*), matching every item of the specified type. This applies the keyword universally and may cause unintended interactions with other mods.",
+      "remediation": "Narrow the filter with name patterns (*Sword, *Dagger), FormID references, or exclusion filters (-keyword) to limit the scope."
+    },
+    {
+      "id": "ERR_SP_MALFORMED_REF",
+      "framework": "skypatcher",
+      "name": "SkyPatcher Malformed Plugin Reference",
+      "severity": "CRITICAL",
+      "match_type": "sp_ref_structure",
+      "description": "A Plugin|FormID reference in this SkyPatcher config has an empty plugin name or empty FormID. SkyPatcher will fail to resolve the reference and skip this operation at game launch.",
+      "remediation": "Correct to the format PluginName.esp|FormID (e.g. Skyrim.esm|0003C21D)."
+    },
+    {
+      "id": "ERR_SP_INVALID_HEX",
+      "framework": "skypatcher",
+      "name": "SkyPatcher Non-Hex FormID",
+      "severity": "CRITICAL",
+      "match_type": "sp_ref_hex",
+      "description": "The FormID portion of a Plugin|FormID reference contains non-hexadecimal characters. SkyPatcher cannot parse this as a valid record reference.",
+      "remediation": "FormIDs must be hexadecimal only (0-9, A-F). Remove any typos, spaces, or non-hex characters from the FormID field."
+    }
+  ]
+}

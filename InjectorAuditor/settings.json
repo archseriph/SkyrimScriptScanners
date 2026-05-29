@@ -1,0 +1,11 @@
+{
+  "mo2_profile":   "C:\\Modding\\MO2\\profiles\\Default",
+  "mo2_mods_dir":  "C:\\Modding\\MO2\\mods",
+  "mo2_overwrite": "C:\\Modding\\MO2\\overwrite",
+
+  "output_dir":    "output",
+
+  "fix_output_mod": "C:\\Modding\\MO2\\mods\\Config Fixes",
+
+  "plugin_overrides": {}
+}

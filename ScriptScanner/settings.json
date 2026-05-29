@@ -1,0 +1,31 @@
+{
+  "mo2_profile":   "C:\\Modding\\MO2\\profiles\\Default",
+  "mo2_mods_dir":  "C:\\Modding\\MO2\\mods",
+  "mo2_overwrite": "C:\\Modding\\MO2\\overwrite",
+
+  "champollion_exe":     "C:\\Modding\\MO2\\tools\\Champollion\\Champollion.exe",
+  "champollion_timeout": 600,
+
+  "papyrus_compiler_exe": "C:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Papyrus Compiler\\PapyrusCompiler.exe",
+  "papyrus_flags_file":   "C:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Papyrus Compiler\\TESV_Papyrus_Flags.flg",
+  "papyrus_import_dirs": [
+    "C:\\Modding\\MO2\\mods\\SKYRIM~1\\Scripts\\Source",
+    "C:\\Modding\\MO2\\mods\\CKOUTP~1\\Source\\Scripts"
+  ],
+  "papyrus_compile_timeout": 60,
+
+  "fix_output_mod": "C:\\Modding\\MO2\\mods\\Config Fixes",
+
+  "cache_dir":  "cache",
+  "output_dir": "output",
+
+  "skip_mods": [],
+
+  "mod_rule_suppressions": {
+    "Dylbills Papyrus Functions":                      ["ERR_UNCAPPED_LOOP"],
+    "Unofficial Skyrim Special Edition Patch - USSEP": ["ERR_ORPHANED_REGISTER"],
+    "Ultimate Optimized Scripts Compilation":          ["ERR_ORPHANED_REGISTER"],
+    "SkyUI":                                           ["ERR_ORPHANED_REGISTER"],
+    "RaceMenu":                                        ["ERR_ORPHANED_REGISTER"]
+  }
+}

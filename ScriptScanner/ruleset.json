@@ -1,0 +1,60 @@
+{
+  "ruleset_version": "1.0.0",
+  "rules": [
+    {
+      "id": "ERR_BUSY_WAIT",
+      "name": "High-Frequency RegisterForUpdate",
+      "severity": "CRITICAL",
+      "match_type": "line_numeric",
+      "regex_pattern": "RegisterForUpdate\\s*\\(\\s*([0-9]*\\.?[0-9]+)\\s*\\)",
+      "numeric_threshold": 0.5,
+      "description": "Script registers for an update interval under 0.5 seconds. Intervals this short run on every game frame and are a leading cause of script lag on large mod lists.",
+      "remediation": "Replace with RegisterForSingleUpdate() for one-shot callbacks, or increase the interval to 1.0+ seconds for polling loops."
+    },
+    {
+      "id": "ERR_UNCAPPED_LOOP",
+      "name": "Uncapped While Loop",
+      "severity": "CRITICAL",
+      "match_type": "while_block",
+      "regex_pattern": "While\\s*\\(",
+      "description": "A While loop was detected that contains no Utility.Wait() call. Without a yield point the Papyrus VM cannot interrupt the loop between ticks, locking the thread until the condition resolves.",
+      "remediation": "Add Utility.Wait(0.1) or higher inside the loop body to yield the thread on each iteration."
+    },
+    {
+      "id": "WARN_PLAYER_LOOKUP",
+      "name": "Uncached Game.GetPlayer() in OnUpdate",
+      "severity": "WARNING",
+      "match_type": "event_scope",
+      "event_name": "onupdate",
+      "regex_pattern": "Game\\.GetPlayer\\(\\)",
+      "min_count": 2,
+      "description": "Multiple Game.GetPlayer() calls detected inside an OnUpdate event handler. Each call resolves the player form through the engine; caching it once costs nothing.",
+      "remediation": "Store the player reference in a script property (Actor Property PlayerRef Auto) or in OnInit, then reuse that variable instead of calling Game.GetPlayer() repeatedly."
+    },
+    {
+      "id": "NOTE_EMPTY_EVENT",
+      "name": "Empty Event Block",
+      "severity": "NOTICE",
+      "match_type": "empty_event",
+      "regex_pattern": "^Event\\s+",
+      "description": "An event handler is defined but contains no executable code. Empty event registrations still consume a hook slot in the engine event table.",
+      "remediation": "If this is not intentionally suppressing a parent class event, remove the empty block to reclaim the event-hook overhead."
+    },
+    {
+      "id": "ERR_ORPHANED_REGISTER",
+      "name": "Orphaned Persistent Registration",
+      "severity": "CRITICAL",
+      "match_type": "file_scope",
+      "description": "Script calls RegisterForUpdate, RegisterForModEvent, or RegisterForAnimationEvent (persistent loops that run until explicitly stopped) but has no UnregisterFor* call anywhere in the file. These registrations accumulate in save files every time the script activates across multiple play sessions, causing save bloat and increasing load-door stall time.",
+      "remediation": "Add UnregisterForUpdate / UnregisterForAllEvents / UnregisterFromAllModEvents in a cleanup handler such as OnDeath, OnUnequipped, OnEffectFinish, or OnUnload. If a single-fire pattern is intended, replace RegisterForUpdate with RegisterForSingleUpdate."
+    },
+    {
+      "id": "WARN_MISSING_EFFECT_CLEANUP",
+      "name": "ActiveMagicEffect Missing OnEffectFinish",
+      "severity": "WARNING",
+      "match_type": "file_scope",
+      "description": "Script extends ActiveMagicEffect and calls RegisterFor* but defines no OnEffectFinish event block. When the magic effect expires or is dispelled, all registrations remain active in the Papyrus event system and persist in the save file indefinitely.",
+      "remediation": "Add an OnEffectFinish(Actor Target, Actor Caster) event block containing the appropriate UnregisterFor* calls to clean up when the effect ends."
+    }
+  ]
+}
